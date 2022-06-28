@@ -8,12 +8,17 @@ class FutbolKlub(models.Model):
     def __str__(self):
         return self.name
 
+
 class Turnir(models.Model):
-    name = models.CharField(max_length=255)    
+    name = models.CharField(max_length=255) 
+    data_start = models.DateField()
+    is_active = models.BooleanField(default=True)
+
     
     def __str__(self):
         return self.name
     
+
 class TurnirTur(models.Model):
     name = models.CharField(max_length=255)
     turnir = models.ForeignKey(Turnir, on_delete=models.CASCADE)
@@ -21,6 +26,7 @@ class TurnirTur(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Match(models.Model):
     data = models.DateField()
@@ -32,4 +38,4 @@ class Match(models.Model):
     winner = models.ForeignKey(FutbolKlub, on_delete=models.CASCADE, blank=True, null=True, related_name='golib')
 
     def __str__(self):
-        return self.first_klub, self.second_klub
+        return f"{self.first_klub}, {self.second_klub}"

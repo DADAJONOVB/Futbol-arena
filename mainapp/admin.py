@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+admin.site.register(FutbolKlub)
+admin.site.register(Turnir)
+admin.site.register(TurnirTur)
+admin.site.register(Match)
