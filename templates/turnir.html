@@ -17,9 +17,9 @@
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Nomi</th>
-                      <th scope="col">Иoshanish sanasi</th>
+                      <th scope="col">Boshanish sanasi</th>
                       <th scope="col">Faolligi</th>
-                      <th scope="col">Batafzil</th>
+                      <th scope="col">Batafsil</th>
 
                     </tr>
                   </thead>
@@ -30,7 +30,7 @@
                       <td>{{turnir.name}}</td>
                       <td>{{turnir.data_start}}</td>
                       <td>Faol</td>
-                      <td>link</td>
+                      <td><a href="{% url 'tur_url' turnir.pk %}">link</a></td>
                     </tr>
                     {% endfor %}
                   </tbody>

@@ -36,6 +36,7 @@ class Match(models.Model):
     second_klub = models.ForeignKey(FutbolKlub, on_delete=models.CASCADE, related_name='ikki')
     second_klub_result = models.PositiveIntegerField(blank=True, null=True)
     winner = models.ForeignKey(FutbolKlub, on_delete=models.CASCADE, blank=True, null=True, related_name='golib')
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.first_klub}, {self.second_klub}"
