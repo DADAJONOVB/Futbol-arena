@@ -1,27 +1,36 @@
 from django.db import models
 
 
-class FutbolKlub(models.Model):
+class Club(models.Model):
     name = models.CharField(max_length=255)
-    img = models.ImageField(upload_to='klub')
+    img = models.ImageField(upload_to='club/', null=True, blank=True)
+    game = models.IntegerField(default=0)
+    win = models.IntegerField(default=0)
+    lose = models.IntegerField(default=0)
+    draw = models.IntegerField(default=0)
+    point = models.IntegerField(default=0)
+    scored = models.IntegerField(default=0)
+    missed = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
 
 
-class Turnir(models.Model):
+class Tournament(models.Model):
     name = models.CharField(max_length=255) 
     data_start = models.DateField()
     is_active = models.BooleanField(default=True)
-
+    winner = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='one', null=True, blank=True)
+    second_club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='two', null=True, blank=True)
+    third_club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='three', null=True, blank=True)
     
     def __str__(self):
         return self.name
     
 
-class TurnirTur(models.Model):
+class Round(models.Model):
     name = models.CharField(max_length=255)
-    turnir = models.ForeignKey(Turnir, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     data_start = models.DateField()
 
     def __str__(self):
@@ -29,14 +38,13 @@ class TurnirTur(models.Model):
 
 
 class Match(models.Model):
-    data = models.DateField()
-    turnir_tur = models.ForeignKey(TurnirTur, on_delete=models.CASCADE)
-    first_klub = models.ForeignKey(FutbolKlub, on_delete=models.CASCADE, related_name='bir')
-    first_klub_result = models.PositiveIntegerField(blank=True, null=True)
-    second_klub = models.ForeignKey(FutbolKlub, on_delete=models.CASCADE, related_name='ikki')
-    second_klub_result = models.PositiveIntegerField(blank=True, null=True)
-    winner = models.ForeignKey(FutbolKlub, on_delete=models.CASCADE, blank=True, null=True, related_name='golib')
+    round = models.ForeignKey(Round, on_delete=models.CASCADE)
+    first_club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='first')
+    second_club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='second')
+    first_club_result = models.PositiveIntegerField(blank=True, null=True)
+    second_club_result = models.PositiveIntegerField(blank=True, null=True)
     status = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.first_klub}, {self.second_klub}"
+        return f"{self.first_club}, {self.second_club}"
+

@@ -12,8 +12,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <div class="d-flex justify-content-center">
-                        <h4>{{match.first_klub}} :</h4>
-                        <h4>{{match.second_klub}}</h4>
+                        <h4>{{match.first_club}} :</h4>
+                        <h4>{{match.second_club}}</h4>
                     </div>
                     <div class="card-header-action">
                         <a data-collapse="#mycard-collapse{{match.pk}}" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
@@ -21,26 +21,15 @@
                 </div>
                 <div class="collapse show" id="mycard-collapse{{match.pk}}" style="">
                     <div class="card-body">
-                        {% if match.status == True %}
                         <div class="d-flex justify-content-around">
-                            <h4>{{match.first_klub}}  </h4>
-                            <h4> {{match.first_klub_result}} :  {{match.first_klub_result}} </h4>
-                            <h4>{{match.second_klub}} </h4> 
+                            <h4>{{match.first_club}}  </h4>
+                            <h4> {{match.first_club_result}} :  {{match.first_club_result}} </h4>
+                            <h4>{{match.second_club}} </h4>
                         </div>
                         <div class="card-footer">
                             <p>G`olib kulub : <a href="#">{{match.winner}} </a> </p>
                             <p>Sana :  {{match.data}}</p>
                         </div>
-                        {% else %}
-                        <div class="d-flex justify-content-around">
-                            <h4>{{match.first_klub}}  </h4>
-                            <h4> 0 : 0</h4>
-                            <h4>{{match.second_klub}} </h4> 
-                        </div>
-                        <div class="card-footer">
-                            <p>Sana :  {{match.data}}</p> 
-                        </div>
-                        {% endif %}
                         <!-- You can show or hide this card. -->
                     </div>
                 </div>
