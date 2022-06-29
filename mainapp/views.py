@@ -1,7 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 
 
+def Loginpage(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = User.objects.filter(username=username)
+        if user.count() > 0:
+            usr = authenticate(username=username, password=password)
+            if usr is not None:
+                login(request, usr)
+                return redirect('dashboard_url')
+            else:
+                messages.error(request, 'Login yoki parol xato!')
+                return redirect('login')
+            return redirect('login')
+        else:
+            messages.error(request, 'Bunday foydalanuvchi mavjud emas!')
+            return redirect('login')
+    return render(request, 'auth-login.html')
+
+
+def LogoutView(request):
+    logout(request)
+    return redirect("login")
+
+
+@login_required(login_url='login')
 def index_view(request):
     turnirs = Tournament.objects.all()[:3]
     context = {
@@ -10,28 +40,79 @@ def index_view(request):
     return render(request, 'index.html', context)
 
 
+@login_required(login_url='login')
 def turnir_view(request):
     turnirs = Tournament.objects.all()
+    club = Club.objects.all()
     context = {
-        'turnirs': turnirs
+        'turnirs': turnirs,
+        "clubs": club
     }
     return render(request, 'turnir.html', context)
 
 
+@login_required(login_url='login')
 def turnir_tur_view(request, pk):
     turs = Round.objects.filter(tournament__pk=pk)
+    clubs = Tournament.objects.get(id=pk).clubs.all().order_by("-point", '-total_goal')
     context = {
-        'turs': turs
+        'turs': turs,
+        "tour": pk,
+        'clubs': clubs
     }
     return render(request, 'turs.html', context)
 
 
+@login_required(login_url='login')
 def turnir_matches_view(request, pk):
     matches = Match.objects.filter(round__pk=pk)
     tur = Round.objects.get(pk=pk)
+    club = Club.objects.all()
     context = {
         'matches': matches,
-        'tur': tur
+        'tur': tur,
+        'round': pk,
+        'clubs': club,
     }
     return render(request, 'matches.html', context)
 
+
+@login_required(login_url='login')
+def AddTournament(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        date = request.POST.get('date')
+        Tournament.objects.create(name=name, data_start=date)
+    return redirect('turnir_url')
+
+
+@login_required(login_url='login')
+def AddRound(request):
+    if request.method == "POST":
+        tournament = request.POST.get("tournament")
+        name = request.POST.get('name')
+        date = request.POST.get('date')
+        Round.objects.create(tournament_id=tournament, name=name, data_start=date)
+    return redirect("tur_url", tournament)
+
+
+@login_required(login_url='login')
+def AddMatch(request):
+    if request.method == "POST":
+        round = request.POST.get("round")
+        first_club = request.POST.get("first_club")
+        second_club = request.POST.get("second_club")
+        print(first_club, second_club)
+        Match.objects.create(round_id=round, first_club_id=first_club, second_club_id=second_club)
+    return redirect("matches_url", round)
+
+
+@login_required(login_url='login')
+def AddClub(request):
+    if request.method == "POST":
+        club = request.POST.getlist('clubs')
+        tournament = request.POST.get('tournament')
+        t = Tournament.objects.get(id=tournament)
+        for i in club:
+            t.clubs.add(Club.objects.get(id=i))
+    return redirect("turnir_url")

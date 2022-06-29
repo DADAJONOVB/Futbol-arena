@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}  
-<div class="main-content" style="min-height: 842px;">
-    <h2 class="section-title">Sortable Card</h2>
-    <p class="section-lead">
-        Other cool cards, this one can be sorted.
-    </p>
+<div class="main-content">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="">Tur uchrashuvlari</h2>
+        </div>
+        <div class="col-5"></div>
+        <div class="col-1">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                      data-target="#exampleModalCenter">add</button>
+        </div>
+    </div>
     <div class="row sortable-card ui-sortable">
         {% for tur in turs %}
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -16,7 +22,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
                       <div class="card-content">
                         <h5 class="font-15">{{tur.name}}</h5>
-                        <h2 class="mb-3 font-18">{{tur.data_start}}</h2>
+                        <h2 class="mb-3 font-18">{{tur.data_start|date:'Y-m-d'}}</h2>
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
@@ -29,7 +35,76 @@
               </div>
             </div>
           </div>
-          
         {% endfor %}
+    </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form action="{% url 'add-round' %}" method="post">
+                {% csrf_token %}
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Tournament</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <input type="hidden" name="tournament" value="{{ tour }}">
+                      <input type="text" class="form-control mt-3" name="name" placeholder="Tur name">
+                      <input type="date" name="date" class="form-control mt-3">
+                  </div>
+                  <div class="modal-footer bg-whitesmoke br">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h4>Turnir jadval</h4>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">name</th>
+                  <th scope="col">game</th>
+                  <th scope="col">win</th>
+                  <th scope="col">lose</th>
+                  <th scope="col">draw</th>
+                  <th scope="col">point</th>
+                  <th scope="col">scored</th>
+                  <th scope="col">missed</th>
+                  <th scope="col">total_goal</th>
+
+                </tr>
+              </thead>
+              <tbody>
+              {% for i in clubs %}
+                <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td>{{ i.name }}</td>
+                  <td>{{ i.game }}</td>
+                  <td>{{ i.win }}</td>
+                  <td>{{ i.lose }}</td>
+                  <td>{{ i.draw }}</td>
+                  <td>{{ i.point }}</td>
+                  <td>{{ i.scored }}</td>
+                  <td>{{ i.missed }}</td>
+                  <td>{{ i.total_goal }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 {% endblock content %}

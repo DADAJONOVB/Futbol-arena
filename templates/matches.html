@@ -2,13 +2,22 @@
 {% load static %}
 {% block content %}  
 <div class="main-content" style="min-height: 842px;">
-    <h2 class="section-title">{{tur.turnir}} chempionatining {{tur}} o`yinlari</h2>
-    <p class="section-lead">
-        {{tur}} boshlanish sanasi: {{tur.data_start}}
-    </p>
+<div class="row">
+    <div class="col-6">
+        <h2 class="section-title">{{tur.turnir}} chempionatining {{tur}} o`yinlari</h2>
+        <p class="section-lead">
+            {{tur}} boshlanish sanasi: {{tur.data_start|date:'Y-m-d'}}
+        </p>
+    </div>
+    <div class="col-5"></div>
+    <div class="col-1">
+        <button  type="button" class="btn btn-primary" data-toggle="modal"
+                 data-target="#exampleModalCenter">add</button>
+    </div>
+</div>
     <div class="row sortable-card ui-sortable">
         {% for match in matches %}
-        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <div class="d-flex justify-content-center">
@@ -26,15 +35,47 @@
                             <h4> {{match.first_club_result}} :  {{match.first_club_result}} </h4>
                             <h4>{{match.second_club}} </h4>
                         </div>
-                        <div class="card-footer">
-                            <p>G`olib kulub : <a href="#">{{match.winner}} </a> </p>
-                            <p>Sana :  {{match.data}}</p>
-                        </div>
-                        <!-- You can show or hide this card. -->
                     </div>
                 </div>
               </div>
         </div>
         {% endfor %}
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form action="{% url 'add-match' %}" method="post">
+                    {% csrf_token %}
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Tournament</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          <input type="hidden" name="round" value="{{ round }}">
+                          <select name="first_club" class="form-control" required>
+                              <option value="" selected disabled>1-Kamanda</option>
+                              {% for i in tur.tournament.clubs.all %}
+                              <option value="{{ i.id }}">{{ i.name }}</option>
+                              {% endfor %}
+                          </select>
+                          <select name="second_club" class="form-control mt-3" required>
+                              <option value="" selected disabled>2-Kamanda</option>
+                              {% for i in tur.tournament.clubs.all %}
+                              <option value="{{ i.id }}">{{ i.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="modal-footer bg-whitesmoke br">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                </form>
+            </div>
+          </div>
+        </div>
+
+    </div>
 </div>
 {% endblock content %}
