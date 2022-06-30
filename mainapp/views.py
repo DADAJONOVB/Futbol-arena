@@ -45,7 +45,43 @@ def CloseMatch(request):
         r = Match.objects.get(id=match)
         r.first_club_result = first_club
         r.second_club_result = second_club
+        r.status = False
         r.save()
+        fc1 = Club.objects.get(id=r.first_club.id)
+        fc2 = Club.objects.get(id=r.second_club.id)
+        if first_club > second_club:
+            fc1.point += 3
+            fc1.win += 1
+            fc1.scored += first_club
+            fc1.missed += second_club
+            fc1.total_goal += (first_club-second_club)
+            fc1.save()
+            fc2.lose += 1
+            fc2.total_goal += (second_club - first_club)
+            fc2.save()
+        if first_club < second_club:
+            fc2.point += 3
+            fc2.win += 1
+            fc2.scored += first_club
+            fc2.missed += second_club
+            fc2.total_goal += (second_club-first_club)
+            fc2.save()
+            fc1.lose += 1
+            fc1.total_goal += (first_club-second_club)
+            fc1.save()
+        if first_club == second_club:
+            fc1.point += 1
+            fc2.point += 1
+            fc1.scored += first_club
+            fc1.missed += second_club
+            fc1.total_goal += (first_club - second_club)
+            fc2.scored += second_club
+            fc2.missed += first_club
+            fc2.total_goal += (second_club - second_club)
+            fc1.draw += 1
+            fc2.draw += 1
+            fc1.save()
+            fc2.save()
     return redirect("matches_url", round)
 
 
@@ -103,6 +139,7 @@ def AddTournament(request):
         club = request.POST.getlist('clubs')
         t = Tournament.objects.create(name=name, data_start=date)
         for i in club:
+            print(i)
             t.clubs.add(Club.objects.get(id=i))
     return redirect('turnir_url')
 
@@ -127,3 +164,25 @@ def AddMatch(request):
         Match.objects.create(round_id=round, first_club_id=first_club, second_club_id=second_club)
     return redirect("matches_url", round)
 
+
+def DeleteTournament(request, pk):
+    Tournament.objects.get(id=pk).delete()
+    return redirect('turnir_url')
+
+
+def ChangeTournament(request, pk):
+    if request.method == "POST":
+        t = Tournament.objects.get(id=pk)
+        name = request.POST.get("name")
+        t.name = name
+        if request.POST.get("date"):
+            date = request.POST.get("date")
+            t.data_start = date
+        a = t.clubs.all()
+        for i in a:
+            t.clubs.remove(i)
+        clubs = request.POST.getlist('clubs')
+        for i in clubs:
+            t.clubs.add(Club.objects.get(id=i))
+        t.save()
+    return redirect('turnir_url')
