@@ -40,8 +40,8 @@ def CloseMatch(request):
     if request.method == "POST":
         round = request.POST.get('round')
         match = request.POST.get('match')
-        first_club = request.POST.get('first_club')
-        second_club = request.POST.get('second_club')
+        first_club = int(request.POST.get('first_club'))
+        second_club = int(request.POST.get('second_club'))
         r = Match.objects.get(id=match)
         r.first_club_result = first_club
         r.second_club_result = second_club

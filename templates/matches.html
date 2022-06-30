@@ -39,9 +39,6 @@
                             {% if match.status %}
                             <button type="button" class="btn btn-primary" data-toggle="modal"
                  data-target="#exampleModalCenteradd{{ i.id }}">yakunlash</button>
-                            {% else %}
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                 data-target="#exampleModalCenteradd{{ i.id }}" disabled>yakunlash</button>
                             {% endif %}
                             <div class="modal fade" id="exampleModalCenteradd{{ i.id }}" tabindex="-1" role="dialog"
                               aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -56,12 +53,11 @@
                                             </button>
                                           </div>
                                           <div class="modal-body">
-
                                               <input type="hidden" name="match" value="{{ match.id }}">
                                               <input type="hidden" name="round" value="{{ tur.id }}">
                                               <div class="row">
                                                     <div class="col-3">
-                                                      <h6>First club</h6>
+                                                      <h6>{{match.first_club}}</h6>
                                                     </div>
                                                     <div class="col-2">
                                                       <input type="text" class="form-control" name="first_club">
@@ -73,7 +69,7 @@
                                                       <input type="text" class="form-control" name="second_club">
                                                     </div>
                                                     <div class="col-3">
-                                                        <h6>Second club</h6>
+                                                        <h6>{{match.second_club}}</h6>
                                                     </div>
 
                                               </div>
