@@ -14,20 +14,15 @@
     </div>
     <div class="row sortable-card ui-sortable">
         {% for tur in turs %}
-        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <div class="card">
               <div class="card-statistic-4">
                 <div class="align-items-center justify-content-between">
                   <a class="row " href="{% url 'matches_url' tur.id %}" style="text-decoration: none">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                    <div class="col-12 pr-0 pt-1">
                       <div class="card-content">
                         <h5 class="font-15">{{tur.name}}</h5>
-                        <h2 class="mb-3 font-18">{{tur.data_start|date:'Y-m-d'}}</h2>
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                      <div class="banner-img">
-                        <img src="{% static 'img/banner/1.png' %}" alt="">
+                        <h2 class="mb-1 font-18">{{tur.data_start|date:'Y-m-d'}}</h2>
                       </div>
                     </div>
                 </a>
@@ -72,32 +67,29 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">name</th>
-                  <th scope="col">game</th>
-                  <th scope="col">win</th>
-                  <th scope="col">lose</th>
-                  <th scope="col">draw</th>
-                  <th scope="col">point</th>
-                  <th scope="col">scored</th>
-                  <th scope="col">missed</th>
-                  <th scope="col">total_goal</th>
-
+                  <th class="text-center" scope="col">#</th>
+                  <th class="text-center" scope="col">name</th>
+                  <th class="text-center" scope="col">game</th>
+                  <th class="text-center" scope="col">win</th>
+                  <th class="text-center" scope="col">lose</th>
+                  <th class="text-center" scope="col">draw</th>
+                  <th class="text-center" scope="col">point</th>
+                  <th class="text-center" scope="col">scored-missed</th>
+                  <th class="text-center" scope="col">total_goal</th>
                 </tr>
               </thead>
               <tbody>
               {% for i in clubs %}
                 <tr>
-                  <th scope="row">{{ forloop.counter }}</th>
-                  <td>{{ i.name }}</td>
-                  <td>{{ i.game }}</td>
-                  <td>{{ i.win }}</td>
-                  <td>{{ i.lose }}</td>
-                  <td>{{ i.draw }}</td>
-                  <td>{{ i.point }}</td>
-                  <td>{{ i.scored }}</td>
-                  <td>{{ i.missed }}</td>
-                  <td>{{ i.total_goal }}</td>
+                  <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                  <td class="text-center">{{ i.name }}</td>
+                  <td class="text-center">{{ i.game }}</td>
+                  <td class="text-center">{{ i.win }}</td>
+                  <td class="text-center">{{ i.lose }}</td>
+                  <td class="text-center">{{ i.draw }}</td>
+                  <td class="text-center">{{ i.point }}</td>
+                  <td class="text-center">{{ i.scored }}-{{ i.missed }}</td>
+                  <td class="text-center">{{ i.total_goal }}</td>
                 </tr>
               {% endfor %}
               </tbody>

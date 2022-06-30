@@ -6,6 +6,10 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 
 
+def Home(request):
+    return render(request, 'front/index.html')
+
+
 def Loginpage(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -29,6 +33,20 @@ def Loginpage(request):
 def LogoutView(request):
     logout(request)
     return redirect("login")
+
+
+@login_required(login_url='login')
+def CloseMatch(request):
+    if request.method == "POST":
+        round = request.POST.get('round')
+        match = request.POST.get('match')
+        first_club = request.POST.get('first_club')
+        second_club = request.POST.get('second_club')
+        r = Match.objects.get(id=match)
+        r.first_club_result = first_club
+        r.second_club_result = second_club
+        r.save()
+    return redirect("matches_url", round)
 
 
 @login_required(login_url='login')
@@ -82,7 +100,10 @@ def AddTournament(request):
     if request.method == "POST":
         name = request.POST.get('name')
         date = request.POST.get('date')
-        Tournament.objects.create(name=name, data_start=date)
+        club = request.POST.getlist('clubs')
+        t = Tournament.objects.create(name=name, data_start=date)
+        for i in club:
+            t.clubs.add(Club.objects.get(id=i))
     return redirect('turnir_url')
 
 
@@ -106,13 +127,3 @@ def AddMatch(request):
         Match.objects.create(round_id=round, first_club_id=first_club, second_club_id=second_club)
     return redirect("matches_url", round)
 
-
-@login_required(login_url='login')
-def AddClub(request):
-    if request.method == "POST":
-        club = request.POST.getlist('clubs')
-        tournament = request.POST.get('tournament')
-        t = Tournament.objects.get(id=tournament)
-        for i in club:
-            t.clubs.add(Club.objects.get(id=i))
-    return redirect("turnir_url")

@@ -4,49 +4,39 @@
 <div class="main-content" >
     <section class="section">
       <div class="section-body">
-        <div class="row">
-          <div class="col-12 col-md-12 col-lg-12">
-            <div class="card">
-              {% if turnirs %}
-              <div class="card-header">
-                  <div class="">
-                        <h4>Turnirlar Jadvali</h4>
-                  </div>
-                <div class="pull-right">
+      <div class="row">
+          <div class="col-12">
+              <div class="pull-right">
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                       data-target="#exampleModalCenter">Add</button>
                 </div>
+          </div>
+      </div>
+        <div class="row">
+        {% for tur in turnirs %}
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="card">
+              <div class="card-statistic-4">
+                <div class="align-items-center justify-content-between">
+                  <a class="row " href="{% url 'tur_url' tur.pk %}" style="text-decoration: none">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                      <div class="card-content">
+                        <h5 class="font-15">{{tur.name}}</h5>
+                        <h2 class="mb-3 font-18">{{tur.data_start|date:'Y-m-d'}}</h2>
+                        <h2 class="mb-3 font-18">{{tur.clubs.all|length}} Jamoa</h2>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                      <div class="banner-img">
+                        <img src="{% static 'img/banner/1.png' %}" alt="">
+                      </div>
+                    </div>
+                </a>
+                </div>
               </div>
-              <div class="card-body">
-                <table class="table table-hover table-dark">
-                  <thead>
-                    <tr>
-                      <th class="text-center" scope="col">#</th>
-                      <th class="text-center" scope="col">Nomi</th>
-                      <th class="text-center" scope="col">Boshanish sanasi</th>
-                      <th class="text-center" scope="col">Faolligi</th>
-                      <th class="text-center" scope="col">Batafsil</th>
-                      <th class="text-center" scope="col">Komanda qo'shish</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for turnir in turnirs %}
-                    <tr>
-                      <th class="text-center" scope="row">{{forloop.counter}}</th>
-                      <td class="text-center">{{turnir.name}}</td>
-                      <td class="text-center">{{turnir.data_start|date:'Y-m-d'}}</td>
-                      <td class="text-center">Faol</td>
-                      <td class="text-center"><a href="{% url 'tur_url' turnir.pk %}">link</a></td>
-                      <td class="text-center"><button  type="button" class="btn btn-primary" data-toggle="modal"
-                      data-target="#exampleModalCenter{{ turnir.id }}">add club</button></td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              {% endif %}
             </div>
           </div>
+        {% endfor %}
         </div>
       </div>
     </section>
@@ -65,37 +55,9 @@
                   <div class="modal-body">
                       <input type="text" class="form-control" name="name" placeholder="Tournament name">
                       <input type="date" name="date" class="form-control mt-3">
-                  </div>
-                  <div class="modal-footer bg-whitesmoke br">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-            </form>
-        </div>
-      </div>
-    </div>
-{% for i in turnirs %}
-    <div class="modal fade" id="exampleModalCenter{{ i.id }}" tabindex="-1" role="dialog"
-      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <form action="{% url 'add-club' %}" method="post">
-                {% csrf_token %}
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Tournament</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <input type="hidden" name="tournament" value="{{ i.id }}">
-                      <select name="clubs" class="form-control" id="" multiple style="height: 300px">
-                          {% for x in clubs %}
-                            {% if x in i.clubs.all  %}
-                          <option value="{{ x.id }}" selected>{{ x.name }}</option>
-                            {% else %}
-                          <option value="{{ x.id }}">{{ x.name }}</option>
-                            {% endif %}
+                      <select name="club" class="form-control mt-3" style="height: 200px" multiple>
+                          {% for i in clubs %}
+                          <option value="{{ i.id }}">{{ i.name }}</option>
                           {% endfor %}
                       </select>
                   </div>
@@ -107,6 +69,5 @@
         </div>
       </div>
     </div>
-{% endfor %}
 </div>
 {% endblock content %}
