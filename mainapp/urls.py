@@ -13,6 +13,7 @@ urlpatterns = [
     path('login', Loginpage, name="login"),
     path('logout/', LogoutView, name="logout"),
     path('close-match/', CloseMatch, name="close-match"),
+    path('update/match/', UpdateMatch, name='update-match'),
     path('delete-tournament/<int:pk>/', DeleteTournament, name="delete-tournament"),
     path('change-tournament/<int:pk>/', ChangeTournament, name="change-tournament"),
 
