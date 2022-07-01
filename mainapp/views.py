@@ -238,3 +238,41 @@ def ChangeTournament(request, pk):
             t.clubs.add(Club.objects.get(id=i))
         t.save()
     return redirect('turnir_url')
+
+
+def ClubsView(request):
+    club = list(Club.objects.all())
+    dt = []
+    for c in club:
+        for t in Tournament.objects.all():
+            if c in t.clubs.all():
+                d = {
+                    'id': c.id,
+                    "status": "Active",
+                    "tournament":  t.name,
+                    "name": c.name,
+                    "img": c.img,
+                    'date': c.date,
+                }
+            else:
+                d = {
+                    'id': c.id,
+                    "status": "Passive",
+                    "tournament": "Turnirda qatnashmayapti",
+                    "name": c.name,
+                    "img": c.img,
+                    'date': c.date,
+                }
+            dt.append(d)
+    context = {
+        "club": dt,
+    }
+    return render(request, 'clubs.html', context)
+
+
+def AddClub(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        img = request.FILES.get("img")
+        Club.objects.create(name=name, img=img)
+    return redirect("clubs")

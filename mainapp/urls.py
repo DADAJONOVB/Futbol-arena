@@ -3,8 +3,10 @@ from .views import *
 
 urlpatterns = [
     path("", Home, name="home"),
-    path('dashboard', index_view, name='dashboard_url'),
+    path('dashboard/', index_view, name='dashboard_url'),
     path('turnir/', turnir_view, name='turnir_url'),
+    path('clubs/', ClubsView, name='clubs'),
+    path('add-club/', AddClub, name='add-club'),
     path('tur/<int:pk>/', turnir_tur_view, name='tur_url'),
     path('matches/<int:pk>/', turnir_matches_view, name='matches_url'),
     path('add-tournament/', AddTournament, name='add-tournament'),

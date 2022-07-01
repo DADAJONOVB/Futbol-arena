@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'bundles/datatables/datatables.min.css' %}">
+  <link rel="stylesheet" href="{% static 'bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css' %}">
+{% endblock %}
+<div class="main-content">
+    <div class="row">
+        <div class="col-11"></div>
+        <div class="col-1 mb-2">
+            <button  type="button" class="btn btn-primary w-100" data-toggle="modal"
+                 data-target="#exampleModalCenter">add</button>
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+              aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form action="{% url 'add-club' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Add club</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              <input type="text" class="form-control mb-1" name="name" placeholder="name">
+                              <input type="file" class="form-control-file" name="img">
+                          </div>
+                          <div class="modal-footer bg-whitesmoke br">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+      <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h4>Klublar</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-striped" id="table-1">
+                        <thead>
+                          <tr>
+                            <th class="text-center" class="text-center">#</th>
+                            <th class="text-center">name</th>
+                            <th class="text-center">img</th>
+                            <th class="text-center">tournament</th>
+                            <th class="text-center">date joined</th>
+                            <th class="text-center">status</th>
+                            <th class="text-center">detail</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in club %}
+                          <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td class="text-center">{{ i.name }}</td>
+                            <td class="text-center"><img alt="image" src="{{ i.img.url }}" width="100"></td>
+                            <td class="text-center">{{ i.tournament }}</td>
+                            <td class="text-center">{{ i.date|date:'Y-m-d' }}</td>
+                            <td class="text-center">
+                                {% if i.status == "Active" %}
+                              <div class="badge badge-success badge-shadow">{{ i.status }}</div>
+                                {% else %}
+                              <div class="badge badge-warning badge-shadow">{{ i.status }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center"><a href="#" class="btn btn-primary">Detail</a></td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+  <script src="{% static 'bundles/datatables/datatables.min.js' %}"></script>
+  <script src="{% static 'bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'bundles/jquery-ui/jquery-ui.min.js' %}"></script>
+  <!-- Page Specific JS File -->
+  <script src="{% static 'js/page/datatables.js' %}"></script>
+{% endblock %}

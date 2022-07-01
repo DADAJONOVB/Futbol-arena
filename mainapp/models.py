@@ -12,6 +12,7 @@ class Club(models.Model):
     scored = models.IntegerField(default=0)
     missed = models.IntegerField(default=0)
     total_goal = models.IntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
