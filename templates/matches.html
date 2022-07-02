@@ -37,13 +37,13 @@
                         </div>
                         {% if match.status %}
                         <div class="d-flex justify-content-around">
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenteradd{{ i.id }}">yakunlash</button>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenteradd{{ match.id }}">yakunlash</button>
                           {% else %}
                           <div class="d-flex justify-content-start">
                             <button class="btn" type="button" data-toggle="modal" data-target="#exampleModalCenterdelete{{ match.id }}"><i style="color: red" class="fas fa-trash"></i></button>
                             <button class="btn" type="button" data-toggle="modal" data-target="#exampleModalCenterEdit{{ match.id }}"><i style="color: orange" class="fas fa-edit"></i></button>
                             {% endif %}
-                            <div class="modal fade" id="exampleModalCenteradd{{ i.id }}" tabindex="-1" role="dialog"
+                            <div class="modal fade" id="exampleModalCenteradd{{ match.id }}" tabindex="-1" role="dialog"
                               aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
@@ -74,7 +74,6 @@
                                                     <div class="col-3">
                                                         <h6>{{match.second_club}}</h6>
                                                     </div>
-
                                               </div>
                                           </div>
                                           <div class="modal-footer bg-whitesmoke br">
@@ -153,8 +152,8 @@
       </div>
     </div>
 {% endfor %}
-{% for i in matches %}
-    <div class="modal fade" id="exampleModalCenterEdit{{ i.id }}" tabindex="-1" role="dialog"
+{% for match in matches %}
+    <div class="modal fade" id="exampleModalCenterEdit{{ match.id }}" tabindex="-1" role="dialog"
       aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -169,10 +168,11 @@
                   <div class="modal-body">
                     <div class="row">
                       <div class="col-6">
+                        <input type="hidden" name="match" value="{{match.id}}">
                         <label>Birinchi jamoa</label>
                         <select class="form-control" name="first_club" >
                           {% for club in clubs %}
-                            {% if club == i.first_club %}
+                            {% if club == match.first_club %}
                               <option selected value="{{club.id}}" >{{club}}</option>
                             {% else %}
                               <option value="{{club.id}}" >{{club}}</option>
@@ -184,7 +184,7 @@
                         <label>Ikkinchi jamoa</label>
                         <select class="form-control" name="second_club">
                           {% for club in clubs %}
-                            {% if club == i.second_club %}
+                            {% if club == match.second_club %}
                               <option selected value="{{club.id}}" >{{club}}</option>
                             {% else %}
                               <option value="{{club.id}}" >{{club}}</option>
@@ -195,13 +195,13 @@
                     </div> <br>
                     <div class="row">
                       <div class="col-5">
-                        <input class="form-control" type="number" value="{{i.first_club_result}}" name="first_club_result">
+                        <input class="form-control" type="number" value="{{match.first_club_result}}" name="first_club_result">
                       </div>
                       <div class="col-2 text-center">
                         <h3>:</h3>
                     </div>
                       <div class="col-5">
-                        <input class="form-control" type="number" value="{{i.second_club_result}}" name="second_club_result">
+                        <input class="form-control" type="number" value="{{match.second_club_result}}" name="second_club_result">
                       </div>
                     </div>
                   </div>

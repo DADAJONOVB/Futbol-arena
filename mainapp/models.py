@@ -7,11 +7,11 @@ class Club(models.Model):
     game = models.IntegerField(default=0)
     win = models.IntegerField(default=0)
     lose = models.IntegerField(default=0)
-    draw = models.IntegerField(default=0)
-    point = models.IntegerField(default=0)
-    scored = models.IntegerField(default=0)
-    missed = models.IntegerField(default=0)
-    total_goal = models.IntegerField(default=0)
+    draw = models.IntegerField(default=0) # durrang
+    point = models.IntegerField(default=0) # achko (1,3)
+    scored = models.IntegerField(default=0) # urgan gol
+    missed = models.IntegerField(default=0) # o`tkizgan gol
+    total_goal = models.IntegerField(default=0) # farq
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

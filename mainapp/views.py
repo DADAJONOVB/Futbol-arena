@@ -40,6 +40,7 @@ def CloseMatch(request):
     if request.method == "POST":
         round = request.POST.get('round')
         match = request.POST.get('match')
+        print(match)
         first_club = int(request.POST.get('first_club'))
         second_club = int(request.POST.get('second_club'))
         r = Match.objects.get(id=match)
@@ -86,56 +87,159 @@ def CloseMatch(request):
 
 def UpdateMatch(request):
     if request.method == "POST":
+        # start take data
         match = request.POST.get('match')
         first_club = int(request.POST.get('first_club'))
         second_club = int(request.POST.get('second_club'))
-        first_club_result = int(request.POST.get('second_club_result'))
+        first_club_result = int(request.POST.get('first_club_result'))
         second_club_result = int(request.POST.get('second_club_result'))
-        print(match)
-        print(first_club)
-        print(second_club)
-        print(first_club_result)
-        print(second_club_result)
-        # r = Match.objects.get(id=match)
-        # r.first_club_result = first_club
-        # r.second_club_result = second_club
-        # r.status = False
-        # r.save()
-        # fc1 = Club.objects.get(id=r.first_club.id)
-        # fc2 = Club.objects.get(id=r.second_club.id)
-        # if first_club > second_club:
-        #     fc1.point += 3
-        #     fc1.win += 1
-        #     fc1.scored += first_club
-        #     fc1.missed += second_club
-        #     fc1.total_goal += (first_club-second_club)
-        #     fc1.save()
-        #     fc2.lose += 1
-        #     fc2.total_goal += (second_club - first_club)
-        #     fc2.save()
-        # if first_club < second_club:
-        #     fc2.point += 3
-        #     fc2.win += 1
-        #     fc2.scored += first_club
-        #     fc2.missed += second_club
-        #     fc2.total_goal += (second_club-first_club)
-        #     fc2.save()
-        #     fc1.lose += 1
-        #     fc1.total_goal += (first_club-second_club)
-        #     fc1.save()
-        # if first_club == second_club:
-        #     fc1.point += 1
-        #     fc2.point += 1
-        #     fc1.scored += first_club
-        #     fc1.missed += second_club
-        #     fc1.total_goal += (first_club - second_club)
-        #     fc2.scored += second_club
-        #     fc2.missed += first_club
-        #     fc2.total_goal += (second_club - second_club)
-        #     fc1.draw += 1
-        #     fc2.draw += 1
-        #     fc1.save()
-        #     fc2.save()
+        # take obj from db
+        match = Match.objects.get(id=match)
+        first_club = Club.objects.get(id=first_club)
+        second_club = Club.objects.get(id=second_club)
+        round = match.round
+        # chek results
+        if match.first_club_result > match.second_club_result:
+            result = 1
+        elif match.second_club_result > match.first_club_result:
+            result = 2
+        else:
+            result = 3
+        #  update objects  
+        if first_club_result > second_club_result:
+            if result ==1:
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -=  match.second_club_result
+                first_club.missed +=  second_club_result 
+                first_club.save()
+                second_club.scored -= match.second_club_result
+                second_club.scored +=  second_club_result
+                second_club.missed -=  match.first_club_result
+                second_club.missed +=  first_club_result 
+                second_club.save()
+            elif result == 2:
+                first_club.win += 1
+                first_club.lose -= 1
+                first_club.point += 3
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -=  match.second_club_result
+                first_club.missed +=  second_club_result 
+                first_club.save()
+                second_club.win -= 1
+                second_club.lose += 1
+                second_club.point -=3
+                second_club.scored -= match.second_club_result
+                second_club.scored +=  second_club_result
+                second_club.missed -=  match.first_club_result
+                second_club.missed +=  first_club_result 
+                second_club.save()
+            else:
+                first_club.draw -=1
+                first_club.win +=1
+                first_club.point -=1
+                first_club.point +=3
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+                second_club.draw -= 1
+                second_club.lose += 1
+        elif first_club_result < second_club_result:
+            if result == 1:
+                first_club.win -= 1
+                first_club.lose +=1
+                first_club.point -= 3
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+            elif result ==2:
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+                second_club.scored -= match.second_club_result
+                second_club.scored += second_club_result
+                second_club.missed -= match.first_club_result
+                second_club.missed += first_club_result
+                second_club.save()
+            else:
+                first_club.draw -=1
+                first_club.point -=1
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+                second_club.draw -=1
+                second_club.point -=1
+                second_club.point +=3
+                second_club.scored -= match.second_club_result
+                second_club.scored += first_club_result
+                second_club.missed -= match.first_club_result
+                second_club.missed += first_club_result
+                second_club.save()
+        else:
+            if result == 1:
+                first_club.win -= 1
+                first_club.draw +=1
+                first_club.scored -= 3
+                first_club.scored +=1
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+                second_club.lose -=1
+                second_club.draw +=1
+                second_club.point +=1
+                second_club.scored -= match.second_club_result
+                second_club.scored += second_club_result
+                second_club.missed -= match.first_club_result
+                second_club.missed += second_club_result
+                second_club.save()
+            elif result == 2:
+                first_club.win -=1
+                first_club.draw +=1
+                first_club.point +=1
+                first_club.scored -= match.first_club_result
+                first_club.scored += first_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+                second_club.win -=1
+                second_club.draw +=1
+                second_club.point -=3
+                second_club.point +=1
+                second_club.scored -= match.first_club_result
+                second_club.scored += first_club_result
+                second_club.missed -= match.first_club_result
+                second_club.missed += first_club_result
+                second_club.save()
+            else:
+                first_club.scored -= match.first_club_result
+                first_club.scored += second_club_result
+                first_club.missed -= match.second_club_result
+                first_club.missed += second_club_result
+                first_club.save()
+                second_club.scored -= match.second_club_result
+                second_club.scored += second_club_result
+                second_club.missed -= match.first_club_result
+                second_club.missed += first_club_result
+                second_club.save()
+        match.first_club = first_club
+        match.second_club = second_club
+        match.first_club_result = first_club_result
+        match.second_club_result = second_club_result
+        match.save()
+
+        return redirect('matches_url', round.id)
+
 
 @login_required(login_url='login')
 def index_view(request):
