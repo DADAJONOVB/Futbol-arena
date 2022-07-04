@@ -97,24 +97,18 @@
                 <form action="{% url 'add-match' %}" method="post">
                     {% csrf_token %}
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Tournament</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Add Match</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
                       <div class="modal-body">
                           <input type="hidden" name="round" value="{{ round }}">
-                          <select name="first_club" class="form-control" required>
+                          <select name="first_club" class="form-control" id="first_club" required onchange="myFunction()">
                               <option value="" selected disabled>1-Kamanda</option>
-                              {% for i in tur.tournament.clubs.all %}
-                              <option value="{{ i.id }}">{{ i.name }}</option>
-                              {% endfor %}
                           </select>
-                          <select name="second_club" class="form-control mt-3" required>
+                          <select name="second_club" class="form-control mt-3 first_club" id="second_club" required>
                               <option value="" selected disabled>2-Kamanda</option>
-                              {% for i in tur.tournament.clubs.all %}
-                              <option value="{{ i.id }}">{{ i.name }}</option>
-                              {% endfor %}
                           </select>
                       </div>
                       <div class="modal-footer bg-whitesmoke br">
@@ -132,16 +126,17 @@
       aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form action="{% url 'delete-tournament' i.id %}" method="post">
+            <form action="{% url 'delete-match' i.id %}" method="post">
                 {% csrf_token %}
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Tournament</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Delete Match</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                      Rostdan ham Turnirni ochirib yubormoqchimisiz?
+                      <input type="hidden" value="{{ tur.id }}" name="round">
+                      Rostdan ham Matchni ochirib yubormoqchimisiz?
                   </div>
                   <div class="modal-footer bg-whitesmoke br">
                     <button type="submit" class="btn btn-primary">Ha</button>
@@ -167,31 +162,13 @@
                   </div>
                   <div class="modal-body">
                     <div class="row">
-                      <div class="col-6">
                         <input type="hidden" name="match" value="{{match.id}}">
-                        <label>Birinchi jamoa</label>
-                        <select class="form-control" name="first_club" >
-                          {% for club in clubs %}
-                            {% if club == match.first_club %}
-                              <option selected value="{{club.id}}" >{{club}}</option>
-                            {% else %}
-                              <option value="{{club.id}}" >{{club}}</option>
-                            {% endif %}
-                          {% endfor %}
-                        </select>
-                      </div>
-                      <div class="col-6">
-                        <label>Ikkinchi jamoa</label>
-                        <select class="form-control" name="second_club">
-                          {% for club in clubs %}
-                            {% if club == match.second_club %}
-                              <option selected value="{{club.id}}" >{{club}}</option>
-                            {% else %}
-                              <option value="{{club.id}}" >{{club}}</option>
-                            {% endif %}
-                          {% endfor %}
-                        </select>
-                      </div>
+                        <div class="col-6 text-center">
+                            <h4>{{ match.first_club.name }}</h4>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h4>{{ match.second_club.name }}</h4>
+                        </div>
                     </div> <br>
                     <div class="row">
                       <div class="col-5">
@@ -213,5 +190,34 @@
         </div>
       </div>
     </div>
+</div>
 {% endfor %}
 {% endblock content %}
+{% block script %}
+    <script>
+        let clubs = {{ maxsulotjs|safe }};
+        console.log(clubs)
+        let select1 = document.getElementById("first_club");
+        let select2 = document.getElementById("second_club");
+        $(document).ready(function(){
+            for(let i=0;i<clubs.length;i++){
+                var added = document.createElement('option');
+                added.value = `${clubs[i]['id']}`;
+                added.innerHTML = `${clubs[i]['name']}`;
+                select1.append(added);
+            }
+        })
+        function myFunction() {
+            let ids = document.getElementById("first_club").value;
+            for(let i=0;i<clubs.length;i++){
+                if(clubs[i]['id'] != ids) {
+                    var added = document.createElement('option');
+                    added.value = `${clubs[i]['id']}`;
+                    added.innerHTML = `${clubs[i]['name']}`;
+                    select2.append(added);
+                }
+            }
+        }
+</script>
+    </script>
+{% endblock %}

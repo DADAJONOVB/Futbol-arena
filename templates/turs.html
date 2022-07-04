@@ -70,12 +70,10 @@
                   <th class="text-center" scope="col">#</th>
                   <th class="text-center" scope="col">name</th>
                   <th class="text-center" scope="col">game</th>
-                  <th class="text-center" scope="col">win</th>
-                  <th class="text-center" scope="col">lose</th>
-                  <th class="text-center" scope="col">draw</th>
+                  <th class="text-center" scope="col">win / lose / draw</th>
                   <th class="text-center" scope="col">point</th>
-                  <th class="text-center" scope="col">scored-missed</th>
-                  <th class="text-center" scope="col">total_goal</th>
+                  <th class="text-center" scope="col">scored / missed</th>
+                  <th class="text-center" scope="col">total / goal</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,11 +82,9 @@
                   <th class="text-center" scope="row">{{ forloop.counter }}</th>
                   <td class="text-center">{{ i.name }}</td>
                   <td class="text-center">{{ i.game }}</td>
-                  <td class="text-center">{{ i.win }}</td>
-                  <td class="text-center">{{ i.lose }}</td>
-                  <td class="text-center">{{ i.draw }}</td>
+                  <td class="text-center">{{ i.win }} / {{ i.lose }} / {{ i.draw }}</td>
                   <td class="text-center">{{ i.point }}</td>
-                  <td class="text-center">{{ i.scored }}-{{ i.missed }}</td>
+                  <td class="text-center">{{ i.scored }} / {{ i.missed }}</td>
                   <td class="text-center">{{ i.total_goal }}</td>
                 </tr>
               {% endfor %}
